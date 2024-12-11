@@ -1,0 +1,120 @@
+<!--Namespace da classe de Modelo para esta view-->
+@model IEnumerable<RpgMvc.Models.PersonagemViewModel>
+
+<!--Inclua os TempData para Sucesso e Erro aqui, conforme exemplo na view de Autenticação-->
+@if (@TempData["Mensagem"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @Html.Raw(@TempData["Mensagem"])</div>
+}
+<!--Configuração para exibir mensagem de erro -->
+@if (@TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["MensagemErro"]</div>
+}
+
+@{ViewBag.Title = "Personagens"; }<!--Título da página para o navegador-->
+
+@{
+            var nomeSessao = new Byte[20];
+            bool nomeOK = Context.Session.TryGetValue("SessionIdUsuario", out nomeSessao);
+            string sessao = string.Empty;
+
+             var nomeSessaoPerfil = new Byte[20];
+            bool perfilOK = Context.Session.TryGetValue("SessionPerfilUsuario", out nomeSessaoPerfil);
+            string sessaoPerfil = string.Empty;
+
+            if (nomeOK)
+                sessao = System.Text.Encoding.UTF8.GetString(nomeSessao);
+
+                if (perfilOK)
+                sessaoPerfil = System.Text.Encoding.UTF8.GetString(nomeSessaoPerfil);
+
+<h2>Relação de Personagens</h2><!--Título da página-->
+<p>
+    <!--Links apontando para views na mesma pasta-->
+    @Html.ActionLink("Criar Novo Personagem", "Create")
+</p>
+<table class="table table-striped">
+    <thead>
+    <tr class="table-primary"><!--Títulos das colunas da tabela-->        
+        <th scope="col">@Html.DisplayNameFor(model => model.Id)</th>        
+        <th scope="col">@Html.DisplayNameFor(model => model.Nome)</th>        
+        <th scope="col">@Html.DisplayNameFor(model => model.Classe)</th>        
+        <th scope="col">@Html.DisplayNameFor(model => model.PontosVida)</th>
+        <th scope="col">@Html.DisplayNameFor(model => model.Disputas)</th>
+        <th scope="col">@Html.DisplayNameFor(model => model.Vitorias)</th>
+        <th scope="col">@Html.DisplayNameFor(model => model.Derrotas)</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--Looping para escrever os dados na tabela-->
+    @foreach (var item in Model)
+    {
+        <tr scope="row">
+            <td>@Html.DisplayFor(modelItem => item.Id)</td>
+            <td>@Html.DisplayFor(modelItem => item.Nome)</td>            
+            <td>@Html.DisplayFor(modelItem => item.Classe)</td>   
+            <td>@Html.DisplayFor(modelItem => item.PontosVida)</td>   
+            <td>@Html.DisplayFor(modelItem => item.Disputas )</td> 
+            <td>@Html.DisplayFor(modelItem => item.Vitorias)</td> 
+            <td>@Html.DisplayFor(modelItem => item.Derrotas)</td>            
+            <td><!--Coluna para Links/botões -->
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id } ) |
+                @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
+
+                 @if (sessaoPerfil == "Admin")
+                {
+                
+                    @Html.ActionLink("Deletar", "Delete", new { id = item.Id }
+                    , new { onclick = "return confirm('Deseja realmente deletar este personagem ?');"}) 
+
+                                     
+                }
+                @Html.Label(" | ") 
+
+                @Html.ActionLink("Lista Habilidades", "Index", "PersonagemHabilidades", new { id = item.Id }) |
+
+                @Html.ActionLink("Atribuir Habilidade", "Create", "PersonagemHabilidades", new { id = item.Id, nome = item.Nome }) |
+                
+                @if (sessaoPerfil == "Admin")
+                {
+                @Html.ActionLink("Restaurar Pontos Vida", "RestaurarPontosVida", new { id = item.Id }
+            , new { onclick = "return confirm('Deseja realmente restaurar pontos vida ?');"}) 
+            }
+
+            @Html.Label(" | ")
+             @if (sessaoPerfil == "Admin")
+                {  
+             @Html.ActionLink("Zerar Ranking", "ZerarRanking", new { id = item.Id }
+            , new { onclick = "return confirm('Deseja realmente zerar ranking ?');"})
+                }
+                
+                
+                
+            </td>
+        </tr>
+    }    
+    </tbody>
+</table>
+
+@if (sessaoPerfil == "Admin")
+                {
+
+@Html.ActionLink("Embate com armas!!!", "Index", "Disputas", null, new { @class = "btn btn-warning" })
+
+@Html.ActionLink("Embate com habilidades!!!", "IndexHabilidades", "Disputas", null, new { @class = "btn btn-dark" })
+
+@Html.ActionLink("Embate em grupo!!!", "DisputaGeral", "Disputas", null, new { @class = "btn btn-danger" })
+
+@Html.ActionLink("Restaurar Pontos de Vida!!!", "RestaurarPontosVidaGeral", "Personagens", null, new { @class = "btn btn-info" })
+
+
+
+@Html.ActionLink("Zerar ranking/Restaurar pontos vida", "ZerarRankingRestaurarVidas", "Personagens",
+null, new { @class = "btn btn-secondary", onclick = "return confirm('Deseja realmente realizar esta ação ?');" })
+}
+
+}
