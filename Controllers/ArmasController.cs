@@ -13,7 +13,7 @@ namespace RpgMvc.Controllers
 {
     public class ArmasController : Controller
     {
-        public string uriBase = "http://luizsouza.somee.com/RpgApi/Armas/";
+        public string uriBase = "http://luizfernando.somee.com/RpgApi/Armas/";
 
         [HttpGet]
         public async Task<ActionResult> IndexAsync()
@@ -45,7 +45,7 @@ namespace RpgMvc.Controllers
                         foreach (ArmaViewModel av in listaArmas)
                         {
                             int usuarioId = int.Parse(HttpContext.Session.GetString("SessionIdUsuario"));
-                            string uriBuscaPersonagens = $"http://luizsouza.somee.com/RpgApi/Personagens/{av.PersonagemId}";
+                            string uriBuscaPersonagens = $"http://luizfernando.somee.com/RpgApi/Personagens/{av.PersonagemId}";
 
                             HttpResponseMessage responsePersonagens = await httpClient.GetAsync(uriBuscaPersonagens);
                             
@@ -90,7 +90,7 @@ namespace RpgMvc.Controllers
 
                 string perfil = HttpContext.Session.GetString("SessionPerfilUsuario");
                 //string uriBuscaPersonagens = (perfil == "Admin") ? "https://apirpg.azurewebsites.net/Personagens/GetAll" : $"https://apirpg.azurewebsites.net/Personagens/GetByPerfil/{usuarioId}";
-                string uriBuscaPersonagens = (perfil == "Admin") ? "http://luizsouza.somee.com/RpgApi/Personagens/GetAll" : $"http://luizsouza.somee.com/RpgApi/Personagens/GetByPerfil/{usuarioId}";
+                string uriBuscaPersonagens = (perfil == "Admin") ? "http://luizfernando.somee.com/RpgApi/Personagens/GetAll" : $"http://luizfernando.somee.com/RpgApi/Personagens/GetByPerfil/{usuarioId}";
 
                 HttpResponseMessage response = await httpClient.GetAsync(uriBuscaPersonagens);
                 string serialized = await response.Content.ReadAsStringAsync();
@@ -197,7 +197,7 @@ namespace RpgMvc.Controllers
                 string perfil = HttpContext.Session.GetString("SessionPerfilUsuario");
 
                 //string uriBuscaPersonagens = (perfil == "Admin") ? "https://apirpg.azurewebsites.net/Personagens/GetAll" : "https://apirpg.azurewebsites.net/Personagens/GetByUser";
-                string uriBuscaPersonagens = (perfil == "Admin") ? "http://luizsouza.somee.com/RpgApi/Personagens/GetAll" : $"http://luizsouza.somee.com/RpgApi/Personagens/GetByPerfil/{usuarioId}";
+                string uriBuscaPersonagens = (perfil == "Admin") ? "http://luizfernando.somee.com/RpgApi/Personagens/GetAll" : $"http://luizfernando.somee.com/RpgApi/Personagens/GetByPerfil/{usuarioId}";
 
                 HttpResponseMessage responsePersonagem = await httpClient.GetAsync(uriBuscaPersonagens);
                 string serializedPersonagem = await responsePersonagem.Content.ReadAsStringAsync();
